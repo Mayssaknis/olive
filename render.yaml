@@ -14,7 +14,7 @@ services:
     name: olivepress-api
     runtime: docker
     plan: free
-    region: frankfurt
+    region: ohio
     dockerfilePath: ./olivepress/backend/Dockerfile
     dockerContext: ./olivepress/backend
     healthCheckPath: /api/health
