@@ -1,0 +1,46 @@
+# ============================================================================
+# OlivePress - PostgreSQL + backend (developpement local / recette)
+# Front web : lancer separement "npm run dev" dans olivepress/web
+# Usage :  docker compose up --build
+# ============================================================================
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: olivepress
+      POSTGRES_USER: olivepress
+      POSTGRES_PASSWORD: ${OLIVEPRESS_DB_PASSWORD:-olivepress}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U olivepress -d olivepress"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 8091
+      OLIVEPRESS_DB_URL: jdbc:postgresql://db:5432/olivepress
+      OLIVEPRESS_DB_USER: olivepress
+      OLIVEPRESS_DB_PASSWORD: ${OLIVEPRESS_DB_PASSWORD:-olivepress}
+      OLIVEPRESS_JWT_SECRET: ${OLIVEPRESS_JWT_SECRET:-dev-secret-a-remplacer-32-caracteres-minimum!!}
+      OLIVEPRESS_JWT_REFRESH_MS: ${OLIVEPRESS_JWT_REFRESH_MS:-604800000}
+      OLIVEPRESS_ADMIN_USER: ${OLIVEPRESS_ADMIN_USER:-admin}
+      OLIVEPRESS_ADMIN_EMAIL: ${OLIVEPRESS_ADMIN_EMAIL:-admin@olivepress.local}
+      OLIVEPRESS_ADMIN_PASSWORD: ${OLIVEPRESS_ADMIN_PASSWORD:-admin1234}
+      OLIVEPRESS_CORS_ORIGINS: ${OLIVEPRESS_CORS_ORIGINS:-http://localhost:5173}
+      OLIVEPRESS_LOGIN_MAX_ATTEMPTS: ${OLIVEPRESS_LOGIN_MAX_ATTEMPTS:-5}
+      OLIVEPRESS_LOGIN_WINDOW_MINUTES: ${OLIVEPRESS_LOGIN_WINDOW_MINUTES:-15}
+      OLIVEPRESS_PUSH_ENABLED: ${OLIVEPRESS_PUSH_ENABLED:-false}
+    ports:
+      - "8091:8091"
+
+volumes:
+  db_data:

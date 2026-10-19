@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "OlivePress",
+    "slug": "olivepress",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "olivepress",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.olivepress.app"
+    },
+    "android": {
+      "package": "com.olivepress.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#283D2B"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "extra": {
+      "apiBaseUrl": "http://192.168.1.9:8091/api"
+    },
+    "plugins": [
+      "expo-sharing",
+      "expo-localization",
+      "expo-notifications"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+# ============================================================================
+# OlivePress - Blueprint Render (backend Spring Boot + base Neon externe)
+#
+# Etapes :
+#   1. Pousser ce depot sur GitHub.
+#   2. Render > New > Blueprint > selectionner le depot (lit ce fichier).
+#   3. Renseigner les variables marquees "sync: false" (base Neon + CORS).
+#
+# La base PostgreSQL n'est PAS creee ici : on utilise Neon (gratuit, permanent).
+# Voir README.md > "Deploiement".
+# ============================================================================
+services:
+  - type: web
+    name: olivepress-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./olivepress/backend/Dockerfile
+    dockerContext: ./olivepress/backend
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: OLIVEPRESS_DB_URL          # jdbc:postgresql://<host-neon>/<db>?sslmode=require
+        sync: false
+      - key: OLIVEPRESS_DB_USER
+        sync: false
+      - key: OLIVEPRESS_DB_PASSWORD
+        sync: false
+      - key: OLIVEPRESS_JWT_SECRET      # genere automatiquement (valeur sure)
+        generateValue: true
+      - key: OLIVEPRESS_CORS_ORIGINS    # ex. https://olivepress.vercel.app
+        sync: false
+      - key: OLIVEPRESS_ADMIN_PASSWORD  # mot de passe du compte admin initial
+        sync: false
+      - key: OLIVEPRESS_ADMIN_EMAIL
+        sync: false
+      - key: OLIVEPRESS_PUSH_ENABLED
+        value: "false"
+      - key: OLIVEPRESS_DB_POOL_SIZE
+        value: "5"
+      - key: JAVA_TOOL_OPTIONS
+        value: "-XX:MaxRAMPercentage=75"
