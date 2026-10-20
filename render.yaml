@@ -15,8 +15,8 @@ services:
     runtime: docker
     plan: free
     region: ohio
-    dockerfilePath: ./olivepress/backend/Dockerfile
-    dockerContext: ./olivepress/backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
